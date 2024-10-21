@@ -180,14 +180,14 @@
             // 立即刷新ToolStripMenuItem
             // 
             this.立即刷新ToolStripMenuItem.Name = "立即刷新ToolStripMenuItem";
-            this.立即刷新ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.立即刷新ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.立即刷新ToolStripMenuItem.Text = "立即刷新";
             this.立即刷新ToolStripMenuItem.Click += new System.EventHandler(this.立即刷新ToolStripMenuItem_Click);
             // 
             // 退出ToolStripMenuItem
             // 
             this.退出ToolStripMenuItem.Name = "退出ToolStripMenuItem";
-            this.退出ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.退出ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.退出ToolStripMenuItem.Text = "退出";
             this.退出ToolStripMenuItem.Click += new System.EventHandler(this.退出ToolStripMenuItem_Click);
             // 

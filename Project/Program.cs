@@ -14,6 +14,7 @@ using System.Xml;
 using System.Threading;
 using System.Runtime.InteropServices;
 using System.Drawing;
+using System.Reflection;
 
 namespace youcaihua
 {
@@ -31,6 +32,7 @@ namespace youcaihua
         [STAThread]
         static void Main(string[] args)
         {
+            AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(CurrentDomain_AssemblyResolve);
             int argnum = args.Length;
             for(int i = 0; i < argnum; i++)
             {
@@ -56,6 +58,17 @@ namespace youcaihua
             //Info.Get_Account("029743", "123456");
             Application.Run(new login_Form());
             //Application.Run(new daily_Form());
+        }
+
+        private static System.Reflection.Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+        {
+            string resourceName = "youcaihua." + new AssemblyName(args.Name).Name + ".dll";
+            using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
+            {
+                byte[] assemblyData = new byte[stream.Length];
+                stream.Read(assemblyData, 0, assemblyData.Length);
+                return Assembly.Load(assemblyData);
+            }
         }
     }
 }
