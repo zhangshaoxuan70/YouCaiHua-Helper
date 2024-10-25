@@ -43,26 +43,29 @@ namespace youcaihua
                     //FreeConsole();
                     Log.Open();
                 }
-                if (args[i].StartsWith("-mallcode=") && Global.mall_code_set==false)
-                {
-                    Global.mall_code = args[i].Substring(10);
-                    Log.Debug("Get mall code.");
-                    
-                    Global.mall_code_set = true;
-                }
+                
             }
 
-            Log.Debug($"debug={Global.debugging}, mall_code={Global.mall_code}, mall_code_set={Global.mall_code_set}");
+            for (int i = 0; i < argnum; i++)
+            {
+                if (args[i].StartsWith("-mall="))
+                {
+                    Global.mall_code = args[i].Substring(6);
+                    Log.Debug($"Get mall code with {Global.mall_code}.");
+                }
+            }
+            Log.Debug($"debug={Global.debugging}, mall_code={Global.mall_code}");
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             //Info.Get_Account("029743", "123456");
+            Global.web_url = $"http://y{Global.mall_code}.yun.youcaihua.net:88";
             Application.Run(new login_Form());
             //Application.Run(new daily_Form());
         }
 
         private static System.Reflection.Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
         {
-            string resourceName = "youcaihua." + new AssemblyName(args.Name).Name + ".dll";
+            string resourceName = "youcaihua.Resources." + new AssemblyName(args.Name).Name + ".dll";
             using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
             {
                 byte[] assemblyData = new byte[stream.Length];

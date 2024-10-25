@@ -217,24 +217,24 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Microsoft.Bcl.AsyncInterfaces.dll" />
-    <EmbeddedResource Include="Microsoft.Extensions.Configuration.Abstractions.dll" />
-    <EmbeddedResource Include="Microsoft.Extensions.Configuration.Binder.dll" />
-    <EmbeddedResource Include="Microsoft.Extensions.Configuration.dll" />
-    <EmbeddedResource Include="Microsoft.Extensions.DependencyInjection.Abstractions.dll" />
-    <EmbeddedResource Include="Microsoft.Extensions.DependencyInjection.dll" />
-    <EmbeddedResource Include="Microsoft.Extensions.Options.dll" />
-    <EmbeddedResource Include="Microsoft.Extensions.Primitives.dll" />
-    <EmbeddedResource Include="Newtonsoft.Json.dll" />
-    <EmbeddedResource Include="System.Buffers.dll" />
-    <EmbeddedResource Include="System.Diagnostics.DiagnosticSource.dll" />
-    <EmbeddedResource Include="System.Memory.dll" />
-    <EmbeddedResource Include="System.Numerics.Vectors.dll" />
-    <EmbeddedResource Include="System.Runtime.CompilerServices.Unsafe.dll" />
-    <EmbeddedResource Include="System.Text.Encodings.Web.dll" />
-    <EmbeddedResource Include="System.Text.Json.dll" />
-    <EmbeddedResource Include="System.Threading.Tasks.Extensions.dll" />
-    <EmbeddedResource Include="System.ValueTuple.dll" />
+    <EmbeddedResource Include="Resources\Microsoft.Bcl.AsyncInterfaces.dll" />
+    <EmbeddedResource Include="Resources\Microsoft.Extensions.Configuration.Abstractions.dll" />
+    <EmbeddedResource Include="Resources\Microsoft.Extensions.Configuration.Binder.dll" />
+    <EmbeddedResource Include="Resources\Microsoft.Extensions.Configuration.dll" />
+    <EmbeddedResource Include="Resources\Microsoft.Extensions.DependencyInjection.Abstractions.dll" />
+    <EmbeddedResource Include="Resources\Microsoft.Extensions.DependencyInjection.dll" />
+    <EmbeddedResource Include="Resources\Microsoft.Extensions.Options.dll" />
+    <EmbeddedResource Include="Resources\Microsoft.Extensions.Primitives.dll" />
+    <EmbeddedResource Include="Resources\Newtonsoft.Json.dll" />
+    <EmbeddedResource Include="Resources\System.Buffers.dll" />
+    <EmbeddedResource Include="Resources\System.Diagnostics.DiagnosticSource.dll" />
+    <EmbeddedResource Include="Resources\System.Memory.dll" />
+    <EmbeddedResource Include="Resources\System.Numerics.Vectors.dll" />
+    <EmbeddedResource Include="Resources\System.Runtime.CompilerServices.Unsafe.dll" />
+    <EmbeddedResource Include="Resources\System.Text.Encodings.Web.dll" />
+    <EmbeddedResource Include="Resources\System.Text.Json.dll" />
+    <EmbeddedResource Include="Resources\System.Threading.Tasks.Extensions.dll" />
+    <EmbeddedResource Include="Resources\System.ValueTuple.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

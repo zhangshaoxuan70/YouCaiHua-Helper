@@ -133,5 +133,10 @@ namespace youcaihua
             timer.Dispose();
             Close();
         }
+
+        private void daily_Form_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            this.timer.Dispose();
+        }
     }
 }

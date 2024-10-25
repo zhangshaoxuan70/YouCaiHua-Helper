@@ -216,6 +216,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "daily_Form";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.daily_Form_FormClosing);
             this.Load += new System.EventHandler(this.daily_Form_Load);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.daily_Form_MouseDown);
             this.panel1.ResumeLayout(false);

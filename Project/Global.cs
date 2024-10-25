@@ -16,7 +16,6 @@ namespace youcaihua
     {
         public static bool debugging = false;
         public static string mall_code = "30950021";
-        public static bool mall_code_set = false;
         public static string login_token = string.Empty;
         public static bool is_login = false;
         public static CookieContainer cookies = new CookieContainer();
@@ -313,7 +312,7 @@ namespace youcaihua
         internal protected static void Open()
         {
             Console.Title = "Logger";
-            Console.WriteLine("You opened logger window!Program made by zhangshaoxuan70. View it at: https://github.com/zhangshaoxuan70/YouCaiHua-Helper");
+            Console.WriteLine("You opened logger window! Program made by zhangshaoxuan70. View it at: https://github.com/zhangshaoxuan70/YouCaiHua-Helper");
         }
     }
 }

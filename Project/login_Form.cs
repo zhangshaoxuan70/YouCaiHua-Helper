@@ -128,8 +128,6 @@ namespace youcaihua
             btn_login.Enabled = false;
             //this.FormBorderStyle = FormBorderStyle.None;
             //this.Padding = new Padding(border_size);
-            if (Global.mall_code_set == false)
-                Log.Warn("Couldn't get mall code, use default.");
             Task.Run(() =>
             {
                 SysInfo result_des = new SysInfo();
