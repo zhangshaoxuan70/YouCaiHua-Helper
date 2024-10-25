@@ -15,7 +15,7 @@ namespace youcaihua
     public class Global
     {
         public static bool debugging = false;
-        public static string mall_code = "";
+        public static string mall_code = "30950021";
         public static string login_token = string.Empty;
         public static bool is_login = false;
         public static CookieContainer cookies = new CookieContainer();

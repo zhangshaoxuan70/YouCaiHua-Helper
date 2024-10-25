@@ -52,9 +52,10 @@ namespace youcaihua
             task_Get_Machine_Sale_Sum=Task.Run(() =>
             {
                 Response result_Machine_Sale = Info.Get_Machine_Sale_Sum();
+
+                Sale_Sum feedback = JsonConvert.DeserializeObject<Sale_Sum>(result_Machine_Sale.Result);
                 if (result_Machine_Sale.StatusCode == 200)
                 {
-                    Sale_Sum feedback = JsonConvert.DeserializeObject<Sale_Sum>(result_Machine_Sale.Result);
                     if (feedback.ResponseStatus.ErrorCode == "0")
                     {
                         TotalCount_Played = feedback.PageInfo.TotalCount;
@@ -67,13 +68,20 @@ namespace youcaihua
                         Close();
                     }
                 }
+                else if(result_Machine_Sale.StatusCode==405)
+                {
+                    MessageBox.Show(feedback.ResponseStatus.Message, $"{feedback.ResponseStatus.ErrorCode}错误！");
+                    timer.Dispose();
+                    Close();
+                }
             });
             task_Get_Total_Ticket_Sum=Task.Run(() =>
             {
                 Response result_Total_Ticket_Sum = Info.Get_Total_Ticket_Sum();
+
+                Sale_Sum feedback = JsonConvert.DeserializeObject<Sale_Sum>(result_Total_Ticket_Sum.Result);
                 if (result_Total_Ticket_Sum.StatusCode == 200)
                 {
-                    Sale_Sum feedback = JsonConvert.DeserializeObject<Sale_Sum>(result_Total_Ticket_Sum.Result);
                     if (feedback.ResponseStatus.ErrorCode == "0")
                     {
                         TotalCount_Ticket_Played = feedback.PageInfo.TotalCount;
@@ -85,6 +93,12 @@ namespace youcaihua
                         timer.Dispose();
                         Close();
                     }
+                }
+                else if(result_Total_Ticket_Sum.StatusCode==405)
+                {
+                    MessageBox.Show(feedback.ResponseStatus.Message, $"{feedback.ResponseStatus.ErrorCode}错误！");
+                    timer.Dispose();
+                    Close();
                 }
             });
             Task.WaitAll(task_Get_Machine_Sale_Sum,task_Get_Total_Ticket_Sum);

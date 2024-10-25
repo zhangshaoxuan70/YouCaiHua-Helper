@@ -57,7 +57,6 @@ namespace youcaihua
             Log.Debug($"debug={Global.debugging}, mall_code={Global.mall_code}");
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            //Info.Get_Account("029743", "123456");
             Global.web_url = $"http://y{Global.mall_code}.yun.youcaihua.net:88";
             Application.Run(new login_Form());
             //Application.Run(new daily_Form());
