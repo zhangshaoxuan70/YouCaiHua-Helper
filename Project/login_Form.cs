@@ -155,6 +155,10 @@ namespace youcaihua
                         this.label_Mall_Info.Text = "连接超时，请重启软件。";
                         break;
                 }
+                if(Global.mall_code=="")
+                {
+                    this.label_Mall_Info.Text = "没有设置店铺代码。";
+                }
             });
 
         }
