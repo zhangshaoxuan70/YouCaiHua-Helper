@@ -40,14 +40,19 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.立即刷新ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.退出ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.Refresh_ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.Time1_ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.Time2_ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.Pause_ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.Instant_ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.Exit_ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel5 = new System.Windows.Forms.Panel();
             this.panel1.SuspendLayout();
             this.panel4.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
+            this.panel5.SuspendLayout();
             this.SuspendLayout();
             // 
             // label_Text_Num
@@ -116,7 +121,7 @@
             // 
             this.label_Percent.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.label_Percent.Font = new System.Drawing.Font("宋体", 15F);
-            this.label_Percent.Location = new System.Drawing.Point(0, 90);
+            this.label_Percent.Location = new System.Drawing.Point(0, 30);
             this.label_Percent.Margin = new System.Windows.Forms.Padding(0);
             this.label_Percent.Name = "label_Percent";
             this.label_Percent.Size = new System.Drawing.Size(212, 30);
@@ -172,29 +177,64 @@
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.立即刷新ToolStripMenuItem,
-            this.退出ToolStripMenuItem});
+            this.Refresh_ToolStripMenuItem,
+            this.Instant_ToolStripMenuItem,
+            this.Exit_ToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(125, 48);
+            this.contextMenuStrip1.ShowCheckMargin = true;
+            this.contextMenuStrip1.ShowImageMargin = false;
+            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 92);
+            this.contextMenuStrip1.TabStop = true;
             // 
-            // 立即刷新ToolStripMenuItem
+            // Refresh_ToolStripMenuItem
             // 
-            this.立即刷新ToolStripMenuItem.Name = "立即刷新ToolStripMenuItem";
-            this.立即刷新ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
-            this.立即刷新ToolStripMenuItem.Text = "立即刷新";
-            this.立即刷新ToolStripMenuItem.Click += new System.EventHandler(this.立即刷新ToolStripMenuItem_Click);
+            this.Refresh_ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.Time1_ToolStripMenuItem,
+            this.Time2_ToolStripMenuItem,
+            this.Pause_ToolStripMenuItem});
+            this.Refresh_ToolStripMenuItem.Name = "Refresh_ToolStripMenuItem";
+            this.Refresh_ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.Refresh_ToolStripMenuItem.Text = "刷新时间";
+            this.Refresh_ToolStripMenuItem.Visible = false;
             // 
-            // 退出ToolStripMenuItem
+            // Time1_ToolStripMenuItem
             // 
-            this.退出ToolStripMenuItem.Name = "退出ToolStripMenuItem";
-            this.退出ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
-            this.退出ToolStripMenuItem.Text = "退出";
-            this.退出ToolStripMenuItem.Click += new System.EventHandler(this.退出ToolStripMenuItem_Click);
+            this.Time1_ToolStripMenuItem.Checked = true;
+            this.Time1_ToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.Time1_ToolStripMenuItem.Name = "Time1_ToolStripMenuItem";
+            this.Time1_ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.Time1_ToolStripMenuItem.Text = "5分钟";
+            // 
+            // Time2_ToolStripMenuItem
+            // 
+            this.Time2_ToolStripMenuItem.Name = "Time2_ToolStripMenuItem";
+            this.Time2_ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.Time2_ToolStripMenuItem.Text = "10分钟";
+            // 
+            // Pause_ToolStripMenuItem
+            // 
+            this.Pause_ToolStripMenuItem.Name = "Pause_ToolStripMenuItem";
+            this.Pause_ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.Pause_ToolStripMenuItem.Text = "暂停";
+            // 
+            // Instant_ToolStripMenuItem
+            // 
+            this.Instant_ToolStripMenuItem.Name = "Instant_ToolStripMenuItem";
+            this.Instant_ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.Instant_ToolStripMenuItem.Text = "立即刷新";
+            this.Instant_ToolStripMenuItem.Click += new System.EventHandler(this.Instant_ToolStripMenuItem_Click);
+            // 
+            // Exit_ToolStripMenuItem
+            // 
+            this.Exit_ToolStripMenuItem.Name = "Exit_ToolStripMenuItem";
+            this.Exit_ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.Exit_ToolStripMenuItem.Text = "退出";
+            this.Exit_ToolStripMenuItem.Click += new System.EventHandler(this.Exit_ToolStripMenuItem_Click);
             // 
             // panel5
             // 
+            this.panel5.Controls.Add(this.label_Percent);
             this.panel5.Location = new System.Drawing.Point(0, 60);
-            this.panel5.Margin = new System.Windows.Forms.Padding(0);
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(212, 60);
             this.panel5.TabIndex = 8;
@@ -202,28 +242,31 @@
             // 
             // daily_Form
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.AutoSize = true;
+            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.ClientSize = new System.Drawing.Size(212, 120);
-            this.ControlBox = false;
-            this.Controls.Add(this.label_Percent);
             this.Controls.Add(this.label_Text_Percent);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.panel5);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "daily_Form";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "daily_Form";
+            this.TopMost = true;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.daily_Form_FormClosing);
-            this.Load += new System.EventHandler(this.daily_Form_Load);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.daily_Form_MouseDown);
             this.panel1.ResumeLayout(false);
             this.panel4.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
             this.contextMenuStrip1.ResumeLayout(false);
+            this.panel5.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -241,8 +284,12 @@
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.Panel panel4;
-        private System.Windows.Forms.ToolStripMenuItem 立即刷新ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem 退出ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem Instant_ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem Exit_ToolStripMenuItem;
         private System.Windows.Forms.Panel panel5;
+        private System.Windows.Forms.ToolStripMenuItem Refresh_ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem Time1_ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem Time2_ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem Pause_ToolStripMenuItem;
     }
 }

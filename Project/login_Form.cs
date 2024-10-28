@@ -53,6 +53,8 @@ namespace youcaihua
         private const int HTCLIENT = 0x1;
         private const int HTCAPTION = 0x2;
 
+        private const int WS_MINIMIZEBOX = 0x00020000;
+
         protected override CreateParams CreateParams
         {
             get
@@ -62,7 +64,8 @@ namespace youcaihua
                 CreateParams cp = base.CreateParams;
                 if (!m_aeroEnabled)
                     cp.ClassStyle |= CS_DROPSHADOW;
-
+                cp.Style |= WS_MINIMIZEBOX;
+                cp.ExStyle |= 0x02000000;
                 return cp;
             }
         }
@@ -165,7 +168,7 @@ namespace youcaihua
 
         private void login_Form_MouseDown(object sender, MouseEventArgs e)
         {
-            if(e.Button==MouseButtons.Left)
+            if(e.Button==MouseButtons.Left && e.Clicks==1)
             {
                 Log.Debug("login form mouse down.");
                 ReleaseCapture();
