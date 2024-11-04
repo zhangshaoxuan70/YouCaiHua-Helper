@@ -133,35 +133,36 @@ namespace youcaihua
             //this.Padding = new Padding(border_size);
             Task.Run(() =>
             {
-                SysInfo result_des = new SysInfo();
-                result = Info.Check_mall(Global.mall_code);
-                switch (result.StatusCode)
+                if(Global.get_mall_code)
                 {
-                    case 200:
-                        result_des = JsonConvert.DeserializeObject<SysInfo>(result.Result);
-                        if(result_des.ResponseStatus.ErrorCode=="0")
-                        {
-                            this.label_Mall_Info.Text = $"登录门店：\n{result_des.MallName}({result_des.MallCode})";
-                            btn_login.Enabled = true;
-                            is_checked = true;
+                    SysInfo result_des = new SysInfo();
+                    result = Info.Check_mall(Global.mall_code);
+                    switch (result.StatusCode)
+                    {
+                        case 200:
+                            result_des = JsonConvert.DeserializeObject<SysInfo>(result.Result);
+                            if (result_des.ResponseStatus.ErrorCode == "0")
+                            {
+                                this.label_Mall_Info.Text = $"登录门店：\n{result_des.MallName}({result_des.MallCode})";
+                                btn_login.Enabled = true;
+                                is_checked = true;
+                                break;
+                            }
+                            else
+                            {
+                                this.label_Mall_Info.Text = $"服务器返回错误：\n{result_des.ResponseStatus.Message}({result_des.ResponseStatus.ErrorCode})";
+                                break;
+                            }
+                        case 404:
+                            this.label_Mall_Info.Text = $"{result_des.MallCode}此店铺代码有错误\n请检查店铺代码。";
                             break;
-                        }
-                        else
-                        {
-                            this.label_Mall_Info.Text = $"服务器返回错误：\n{result_des.ResponseStatus.Message}({result_des.ResponseStatus.ErrorCode})";
+                        case 502:
+                            this.label_Mall_Info.Text = "连接超时，请重启软件。";
                             break;
-                        }
-                    case 404:
-                        this.label_Mall_Info.Text = $"{result_des.MallCode}此店铺代码有错误\n请检查店铺代码。";
-                        break;
-                    case 502:
-                        this.label_Mall_Info.Text = "连接超时，请重启软件。";
-                        break;
+                    }
                 }
-                if(Global.mall_code=="")
-                {
+                else
                     this.label_Mall_Info.Text = "没有设置店铺代码。";
-                }
             });
 
         }
@@ -254,24 +255,12 @@ namespace youcaihua
                         if(login_Info.ResponseStatus.ErrorCode=="0")
                         {
                             label_Error.ForeColor = Color.Green;
-                            label_Error.Text = $"登录成功！\n{login_Info.Data.RealName}\n5秒钟后该窗口将自动退出。";
-                            Thread close_t = new Thread(delegate()
-                            {
-                                Thread.Sleep(1000);
-                                label_Error.Text = $"登录成功！\n{login_Info.Data.RealName}\n4秒钟后该窗口将自动退出。";
-                                Thread.Sleep(1000);
-                                label_Error.Text = $"登录成功！\n{login_Info.Data.RealName}\n3秒钟后该窗口将自动退出。";
-                                Thread.Sleep(1000);
-                                label_Error.Text = $"登录成功！\n{login_Info.Data.RealName}\n2秒钟后该窗口将自动退出。";
-                                Thread.Sleep(1000);
-                                label_Error.Text = $"登录成功！\n{login_Info.Data.RealName}\n1秒钟后该窗口将自动退出。";
-                                Thread.Sleep(1000);
-                                Close();
-                            });
-                            close_t.Start();
+                            label_Error.Text = $"登录成功！\n{login_Info.Data.RealName}\n窗口即将退出。";
+                            this.Close();
                             Thread t = new Thread(delegate ()
                             {
-                                new daily_Form().ShowDialog();
+                                Thread.Sleep(1000);
+                                new daily_Form(login_Info).ShowDialog();
                             });
                             t.Start();
 

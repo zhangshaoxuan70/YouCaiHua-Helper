@@ -34,32 +34,40 @@ namespace youcaihua
         {
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(CurrentDomain_AssemblyResolve);
             int argnum = args.Length;
-            for(int i = 0; i < argnum; i++)
+            bool is_debug = false;
+            string mall_code = "";
+            bool get_mall_code = false;
+            foreach(string arg in args)
             {
-                if (args[i] == "-debug" && Global.debugging==false)
+                if (arg == "-debug" && !is_debug)
+                    is_debug = true;
+                if (arg.StartsWith("-mall=") && !get_mall_code)
                 {
-                    Global.debugging = true;
-                    AllocConsole();
-                    //FreeConsole();
-                    Log.Open();
+                    mall_code = arg.Substring(6);
+                    get_mall_code = true;
                 }
-                
             }
 
-            for (int i = 0; i < argnum; i++)
+            if(is_debug)
             {
-                if (args[i].StartsWith("-mall="))
-                {
-                    Global.mall_code = args[i].Substring(6);
-                    Log.Debug($"Get mall code with {Global.mall_code}.");
-                }
+                Global.debugging = true;
+                AllocConsole();
+                //FreeConsole();
+                Log.Open();
             }
-            Log.Debug($"debug={Global.debugging}, mall_code={Global.mall_code}");
+            if(get_mall_code)
+            {
+                Global.get_mall_code = true;
+                Global.mall_code = mall_code;
+                Log.Debug($"Get mall code with {Global.mall_code}.");
+                Global.web_url = $"http://y{Global.mall_code}.yun.youcaihua.net:88";
+            }
+
+            Log.Debug($"debug={Global.debugging}, mall_code={Global.mall_code}, get_mall_code={Global.get_mall_code}");
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Global.web_url = $"http://y{Global.mall_code}.yun.youcaihua.net:88";
             Application.Run(new login_Form());
-            //Application.Run(new daily_Form());
+            //Application.Run(new daily_Form(log));
         }
 
         private static System.Reflection.Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)

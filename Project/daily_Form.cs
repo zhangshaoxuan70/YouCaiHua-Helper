@@ -12,6 +12,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Threading;
+using System.Data.SqlTypes;
 
 namespace youcaihua
 {
@@ -118,10 +119,26 @@ namespace youcaihua
         public const int WM_SYSCOMMAND = 0x0112;
         public const int SC_MOVE = 0xF010;
 
+        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        public static extern IntPtr GetForegroundWindow();
+
+        [DllImport("user32.dll")]
+        [return:MarshalAs(UnmanagedType.Bool)]
+        public static extern bool GetWindowRect(IntPtr hWnd, ref RECT rect);
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct RECT
+        {
+            public int Left;
+            public int Top; 
+            public int Right;
+            public int Bottom;
+        }
+
         private System.Threading.Timer timer;
         private bool is_using = false;
 
-        public daily_Form()
+        public daily_Form(Login_Info login_Info)
         {
             m_aeroEnabled = false;
             InitializeComponent();
@@ -129,6 +146,17 @@ namespace youcaihua
             int y = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Size.Height / 20;
             this.SetDesktopLocation(x, y);
             CheckForIllegalCrossThreadCalls = false;
+
+            if (login_Info.ResponseStatus.ErrorCode!="0")
+                this.Close();
+            else
+                Account_ToolStripMenuItem.Text = $"{login_Info.Data.RealName}({login_Info.Data.LoginName})";
+            /*RECT fx = new RECT();
+            IntPtr h = GetForegroundWindow();
+            GetWindowRect(h, ref fx);
+            int width = fx.Right - fx.Left;
+            int height = fx.Bottom - fx.Top;
+            Log.Info($"{width},{height}");*/
             timer = new System.Threading.Timer(Load_Current,null,0,300000);
         }
 
@@ -147,6 +175,8 @@ namespace youcaihua
             bool Check_Played = false;
             bool Check_Ticket_Played = false;
             is_using = true;
+            bool is_error = false;
+            ResponseStatus error_response = new ResponseStatus();
             task_Get_Machine_Sale_Sum=Task.Run(() =>
             {
                 Response result_Machine_Sale = Info.Get_Machine_Sale_Sum();
@@ -161,16 +191,16 @@ namespace youcaihua
                     }
                     else
                     {
-                        MessageBox.Show(feedback.ResponseStatus.Message, $"{feedback.ResponseStatus.ErrorCode}错误！");
-                        timer.Dispose();
-                        Close();
+                        is_error = true;
+                        error_response.ErrorCode = feedback.ResponseStatus.ErrorCode;
+                        error_response.Message = feedback.ResponseStatus.Message;
                     }
                 }
                 else if(result_Machine_Sale.StatusCode==405)
                 {
-                    MessageBox.Show(feedback.ResponseStatus.Message, $"{feedback.ResponseStatus.ErrorCode}错误！");
-                    timer.Dispose();
-                    Close();
+                    is_error = true;
+                    error_response.ErrorCode = feedback.ResponseStatus.ErrorCode;
+                    error_response.Message = feedback.ResponseStatus.Message;
                 }
             });
             task_Get_Total_Ticket_Sum=Task.Run(() =>
@@ -187,25 +217,37 @@ namespace youcaihua
                     }
                     else
                     {
-                        MessageBox.Show(feedback.ResponseStatus.Message, $"{feedback.ResponseStatus.ErrorCode}错误！");
-                        timer.Dispose();
-                        Close();
+                        is_error = true;
+                        error_response.ErrorCode = feedback.ResponseStatus.ErrorCode;
+                        error_response.Message = feedback.ResponseStatus.Message;
                     }
                 }
                 else if(result_Total_Ticket_Sum.StatusCode==405)
                 {
-                    MessageBox.Show(feedback.ResponseStatus.Message, $"{feedback.ResponseStatus.ErrorCode}错误！");
-                    timer.Dispose();
-                    Close();
+                    is_error = true;
+                    error_response.ErrorCode = feedback.ResponseStatus.ErrorCode;
+                    error_response.Message = feedback.ResponseStatus.Message;
                 }
             });
             Task.WaitAll(task_Get_Machine_Sale_Sum,task_Get_Total_Ticket_Sum);
             is_using = false;
+            if(is_error)
+            {
+                MessageBox.Show($"服务器错误，程序即将退出\n{error_response.Message}", $"{error_response.ErrorCode}错误！");
+                timer.Dispose();
+                this.Close();
+            }
             if(Check_Played && Check_Ticket_Played)
             {
                 label_Num.Text = TotalCount_Played.ToString();
                 label_Played.Text = TotalCount_Ticket_Played.ToString();
-                label_Percent.Text = ((decimal)TotalCount_Ticket_Played / (decimal)TotalCount_Played).ToString("P");
+                decimal percent=(decimal)TotalCount_Ticket_Played / (decimal)TotalCount_Played;
+                Log.Info(percent.ToString());
+                if(percent<0.6m)
+                    label_Percent.ForeColor = Color.Red;
+                else
+                    label_Percent.ForeColor = Color.Green;
+                label_Percent.Text = percent.ToString("P");
             }
         }
 
@@ -243,6 +285,17 @@ namespace youcaihua
         private void daily_Form_FormClosing(object sender, FormClosingEventArgs e)
         {
             this.timer.Dispose();
+        }
+
+        private void daily_Form_Load(object sender, EventArgs e)
+        {
+
+            Size = new Size(100, 100);
+            panel_Top.Height= panel_Bottom.Height = (Height - (Padding.All * 2)) / 2;
+            panel_Text.Height = panel_Num.Height = panel_Top.Height / 2;
+            label_Text_Percent.Height = label_Percent.Height = panel_Bottom.Height / 2;
+            label_Text_Num.Width = label_Text_Played.Width = panel_Text.Width / 2;
+            label_Num.Width = label_Played.Width = panel_Num.Width / 2;
         }
     }
 }
