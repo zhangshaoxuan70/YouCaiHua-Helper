@@ -12,6 +12,12 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Threading;
+using System.Data.SqlTypes;
+using youcaihua.Project;
+using System.Drawing.Printing;
+using System.Numerics;
+=========
+>>>>>>>>> Temporary merge branch 2
 
 namespace youcaihua
 {
