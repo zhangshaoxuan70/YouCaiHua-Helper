@@ -15,13 +15,18 @@ namespace youcaihua
     public class Global
     {
         public static bool debugging = false;
-        public static string mall_code = "";
-        public static bool get_mall_code = false;
+        public static bool is_formtest = false;
+        public static string mall_code = "30950021";
+        public static bool get_mall_code = true;
         public static string login_token = string.Empty;
         public static bool is_login = false;
         public static CookieContainer cookies = new CookieContainer();
         public static string web_url = $"http://y{mall_code}.yun.youcaihua.net:88";
         public static string UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36 Edg/128.0.0.0";
+
+        public static int current_Num = 0;
+        public static int current_Played = 0;
+        public static decimal current_Percent = 0m;
     }
     public class Info
     {
@@ -198,8 +203,9 @@ namespace youcaihua
             {
                 HttpWebResponse response = (HttpWebResponse)e.Response;
                 int status = (int)response.StatusCode;
-                Log.Debug(status);
-                return new Response(status);
+                Log.Debug(status); 
+                string responseString = new StreamReader(response.GetResponseStream(), Encoding.UTF8).ReadToEnd();
+                return new Response(status, responseString);
             }
         }
 
@@ -243,7 +249,8 @@ namespace youcaihua
                 HttpWebResponse response = (HttpWebResponse)e.Response;
                 int status = (int)response.StatusCode;
                 Log.Debug(status);
-                return new Response(status);
+                string responseString = new StreamReader(response.GetResponseStream(), Encoding.UTF8).ReadToEnd();
+                return new Response(status,responseString);
             }
         }
     }
