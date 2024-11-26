@@ -127,43 +127,56 @@ namespace youcaihua
         {
             m_aeroEnabled = false;
             InitializeComponent();
+            this.Text = "登录";
             CheckForIllegalCrossThreadCalls = false;
             btn_login.Enabled = false;
             //this.FormBorderStyle = FormBorderStyle.None;
             //this.Padding = new Padding(border_size);
-            Task.Run(() =>
+            if(!Global.is_formtest)
             {
-                if(Global.get_mall_code)
+                Task.Run(() =>
                 {
-                    SysInfo result_des = new SysInfo();
-                    result = Info.Check_mall(Global.mall_code);
-                    switch (result.StatusCode)
+                    if (Global.get_mall_code)
                     {
-                        case 200:
-                            result_des = JsonConvert.DeserializeObject<SysInfo>(result.Result);
-                            if (result_des.ResponseStatus.ErrorCode == "0")
-                            {
-                                this.label_Mall_Info.Text = $"登录门店：\n{result_des.MallName}({result_des.MallCode})";
-                                btn_login.Enabled = true;
-                                is_checked = true;
+                        SysInfo result_des = new SysInfo();
+                        result = Info.Check_mall(Global.mall_code);
+                        switch (result.StatusCode)
+                        {
+                            case 200:
+                                result_des = JsonConvert.DeserializeObject<SysInfo>(result.Result);
+                                if (result_des.ResponseStatus.ErrorCode == "0")
+                                {
+                                    this.label_Mall_Info.Text = $"登录门店：\n{result_des.MallName}({result_des.MallCode})";
+                                    btn_login.Enabled = true;
+                                    is_checked = true;
+                                    break;
+                                }
+                                else
+                                {
+                                    this.label_Mall_Info.Text = $"服务器返回错误：\n{result_des.ResponseStatus.Message}({result_des.ResponseStatus.ErrorCode})";
+                                    break;
+                                }
+                            case 404:
+                                this.label_Mall_Info.Text = $"{result_des.MallCode}此店铺代码有错误\n请检查店铺代码。";
                                 break;
-                            }
-                            else
-                            {
-                                this.label_Mall_Info.Text = $"服务器返回错误：\n{result_des.ResponseStatus.Message}({result_des.ResponseStatus.ErrorCode})";
+                            case 502:
+                                this.label_Mall_Info.Text = "连接超时，请重启软件。";
                                 break;
-                            }
-                        case 404:
-                            this.label_Mall_Info.Text = $"{result_des.MallCode}此店铺代码有错误\n请检查店铺代码。";
-                            break;
-                        case 502:
-                            this.label_Mall_Info.Text = "连接超时，请重启软件。";
-                            break;
+                        }
                     }
-                }
-                else
-                    this.label_Mall_Info.Text = "没有设置店铺代码。";
-            });
+                    else
+                        this.label_Mall_Info.Text = "没有设置店铺代码。";
+                });
+            }
+            else
+            {
+                this.label_Mall_Info.Text = "You are in testing mode!\nPlease report if something was wrong!";
+                Thread t = new Thread(delegate ()
+                {
+                    new daily_Form(new Login_Info()).ShowDialog();
+                });
+                t.Start();
+            }
 
         }
 

@@ -235,7 +235,7 @@
             this.MaximizeBox = false;
             this.Name = "login_Form";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "登录";
+            this.Text = "login_Form";
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.login_Form_MouseDown);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();

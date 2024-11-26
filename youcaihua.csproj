@@ -158,6 +158,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Project\Calculator_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Project\Calculator_Form.Designer.cs">
+      <DependentUpon>Calculator_Form.cs</DependentUpon>
+    </Compile>
     <Compile Include="Project\daily_Form.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -174,6 +180,9 @@
     </Compile>
     <Compile Include="Project\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Project\Calculator_Form.resx">
+      <DependentUpon>Calculator_Form.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Project\daily_Form.resx">
       <DependentUpon>daily_Form.cs</DependentUpon>
     </EmbeddedResource>
