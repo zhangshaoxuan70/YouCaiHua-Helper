@@ -16,8 +16,8 @@ namespace youcaihua
     {
         public static bool debugging = false;
         public static bool is_formtest = false;
-        public static string mall_code = "30950021";
-        public static bool get_mall_code = true;
+        public static string mall_code = "";
+        public static bool get_mall_code = false;
         public static string login_token = string.Empty;
         public static bool is_login = false;
         public static CookieContainer cookies = new CookieContainer();
