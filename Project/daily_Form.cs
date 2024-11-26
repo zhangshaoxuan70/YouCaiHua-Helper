@@ -12,7 +12,6 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Threading;
-using System.Data.SqlTypes;
 
 namespace youcaihua
 {
@@ -122,14 +121,14 @@ namespace youcaihua
         public static extern IntPtr GetForegroundWindow();
 
         [DllImport("user32.dll")]
-        [return:MarshalAs(UnmanagedType.Bool)]
+        [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool GetWindowRect(IntPtr hWnd, ref RECT rect);
 
         [StructLayout(LayoutKind.Sequential)]
         public struct RECT
         {
             public int Left;
-            public int Top; 
+            public int Top;
             public int Right;
             public int Bottom;
         }
@@ -150,26 +149,23 @@ namespace youcaihua
             this.SetDesktopLocation(x, y);
             CheckForIllegalCrossThreadCalls = false;
 
-            if(!Global.is_formtest)
-            {
-                if (login_Info.ResponseStatus.ErrorCode != "0")
-                    this.Close();
-                else
-                    Account_ToolStripMenuItem.Text = $"{login_Info.Data.RealName}({login_Info.Data.LoginName})";
-                /*RECT fx = new RECT();
-                IntPtr h = GetForegroundWindow();
-                GetWindowRect(h, ref fx);
-                int width = fx.Right - fx.Left;
-                int height = fx.Bottom - fx.Top;
-                Log.Info($"{width},{height}");*/
-                timer = new System.Threading.Timer(Load_Current, null, 0, 300000);
-            }
-            
+            if (login_Info.ResponseStatus.ErrorCode != "0")
+                this.Close();
+            else
+                Account_ToolStripMenuItem.Text = $"{login_Info.Data.RealName}({login_Info.Data.LoginName})";
+            /*RECT fx = new RECT();
+            IntPtr h = GetForegroundWindow();
+            GetWindowRect(h, ref fx);
+            int width = fx.Right - fx.Left;
+            int height = fx.Bottom - fx.Top;
+            Log.Info($"{width},{height}");*/
+            timer = new System.Threading.Timer(Load_Current, null, 0, 300000);
+
         }
 
         private void Load_Current(object sender)
         {
-            if(is_using==true)
+            if (is_using == true)
             {
                 Log.Warn("HttpWebRequest is using!");
                 return;
@@ -184,7 +180,7 @@ namespace youcaihua
             is_using = true;
             bool is_error = false;
             ResponseStatus error_response = new ResponseStatus();
-            task_Get_Machine_Sale_Sum=Task.Run(() =>
+            task_Get_Machine_Sale_Sum = Task.Run(() =>
             {
                 Response result_Machine_Sale = Info.Get_Machine_Sale_Sum();
 
@@ -210,7 +206,7 @@ namespace youcaihua
                     error_response.Message = feedback.ResponseStatus.Message;
                 }
             });
-            task_Get_Total_Ticket_Sum=Task.Run(() =>
+            task_Get_Total_Ticket_Sum = Task.Run(() =>
             {
                 Response result_Total_Ticket_Sum = Info.Get_Total_Ticket_Sum();
 
@@ -236,16 +232,16 @@ namespace youcaihua
                     error_response.Message = feedback.ResponseStatus.Message;
                 }
             });
-            Task.WaitAll(task_Get_Machine_Sale_Sum,task_Get_Total_Ticket_Sum);
+            Task.WaitAll(task_Get_Machine_Sale_Sum, task_Get_Total_Ticket_Sum);
             Log.Debug(is_error.ToString());
             is_using = false;
-            if(is_error)
+            if (is_error)
             {
-                MessageBox.Show($"服务器错误，程序即将退出\n{error_response.Message}", $"{error_response.ErrorCode}错误！",MessageBoxButtons.OK,MessageBoxIcon.Error);
+                MessageBox.Show($"服务器错误，程序即将退出\n{error_response.Message}", $"{error_response.ErrorCode}错误！", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 timer.Dispose();
                 this.Close();
             }
-            if(Check_Played && Check_Ticket_Played)
+            if (Check_Played && Check_Ticket_Played)
             {
                 Global.current_Num = TotalCount_Played;
                 Global.current_Played = TotalCount_Ticket_Played;
@@ -256,10 +252,10 @@ namespace youcaihua
                     label_Percent.Text = "0.00%";
                     return;
                 }
-                Global.current_Percent= (decimal)TotalCount_Ticket_Played / (decimal)TotalCount_Played;
+                Global.current_Percent = (decimal)TotalCount_Ticket_Played / (decimal)TotalCount_Played;
                 label_Num.Text = TotalCount_Played.ToString();
                 label_Played.Text = TotalCount_Ticket_Played.ToString();
-                decimal percent=(decimal)TotalCount_Ticket_Played / (decimal)TotalCount_Played;
+                decimal percent = (decimal)TotalCount_Ticket_Played / (decimal)TotalCount_Played;
                 Log.Info(percent.ToString());
                 calculator_percent();
                 if (percent < 0.6m)
@@ -275,13 +271,13 @@ namespace youcaihua
         private void daily_Form_MouseDown(object sender, MouseEventArgs e)
         {
             textBox1.Focus();
-            if (e.Button == MouseButtons.Left && e.Clicks==1)
+            if (e.Button == MouseButtons.Left && e.Clicks == 1)
             {
                 Log.Debug("daily form mouse down.");
                 ReleaseCapture();
                 SendMessage(this.Handle, WM_SYSCOMMAND, SC_MOVE + HTCAPTION, 0);
             }
-            else if(e.Button==MouseButtons.Right)
+            else if (e.Button == MouseButtons.Right)
             {
                 Log.Debug("Show right context menu.");
                 contextMenuStrip1.Show(MousePosition);
@@ -317,19 +313,21 @@ namespace youcaihua
             catch { }
         }
 
+
         private void daily_Form_Load(object sender, EventArgs e)
         {
+
             this.Text = "油菜花助手浮窗";
             Size = new Size(100, 100);
             this.TopMost = true;
             panel_Top.Height = panel_calculator_top.Height = panel_fully_top.Height / 2;
             panel_Bottom.Height = panel_fully_bottom.Height / 2;
-            panel_input_Num.Width = panel_input_Played.Width = panel_input.Width / 2-2;
+            panel_input_Num.Width = panel_input_Played.Width = panel_input.Width / 2 - 2;
             label_Num.Width = label_Played.Width = panel_Num.Width / 2;
             label_Played.Width = label_Played.Width = panel_Num.Width / 2;
-            
-            panel_calculator_top.Visible=panel_calculator_percent.Visible = false;
-            panel_fully_top.Height= panel_fully_bottom.Height = 45;
+
+            panel_calculator_top.Visible = panel_calculator_percent.Visible = false;
+            panel_fully_top.Height = panel_fully_bottom.Height = 45;
         }
 
         private void Num_Only_ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -380,7 +378,7 @@ namespace youcaihua
                         Log.Info("Change to 10 minutes.");
                         break;
                     case "Pause_ToolStripMenuItem":
-                        timer.Change(Timeout.Infinite,Timeout.Infinite);
+                        timer.Change(Timeout.Infinite, Timeout.Infinite);
                         Log.Info("Change to pause.");
                         break;
                 }
@@ -407,14 +405,14 @@ namespace youcaihua
             }*/
             textBox_Num.Visible = !textBox_Num.Visible;
             textBox_Played.Visible = !textBox_Played.Visible;
-            if(!is_calculator)
+            if (!is_calculator)
             {
                 is_calculator = !is_calculator;
                 Size = new Size(100, 200);
-                panel_calculator_top.Visible= panel_calculator_percent.Visible = true;
+                panel_calculator_top.Visible = panel_calculator_percent.Visible = true;
                 panel_calculator_top.Height += 5;
                 panel_calculator_percent.Height += 5;
-                panel_fully_top.Height=panel_fully_bottom.Height = 100;
+                panel_fully_top.Height = panel_fully_bottom.Height = 100;
                 calculator_percent();
                 this.Refresh();
                 this.Refresh();
@@ -459,13 +457,16 @@ namespace youcaihua
             int played_new = Global.current_Played + input_Total_Played;
             label_count_Num.Text = num_new.ToString();
             label_count_Played.Text = played_new.ToString();
-            if(num_new==0)
+            if (num_new == 0)
             {
                 label_percent_difference.ForeColor = Color.Black;
                 label_percent_difference.Text = "0.00%";
+                label_percent_new.ForeColor = Color.Black;
+                label_percent_new.Text = "0.00%";
                 return;
             }
             decimal percent_new = (decimal)played_new / (decimal)num_new;
+            Log.Debug(percent_new);
             if (percent_new < 0.6m)
                 label_percent_new.ForeColor = Color.Red;
             else
@@ -474,7 +475,7 @@ namespace youcaihua
                 label_percent_new.ForeColor = Color.Black;
             label_percent_new.Text = percent_new.ToString("P");
             decimal percent_difference = percent_new - Global.current_Percent;
-            decimal percent_round = decimal.Round(percent_difference,4);
+            decimal percent_round = decimal.Round(percent_difference, 4);
             if (percent_round > 0m)
             {
                 label_percent_difference.ForeColor = Color.Green;
@@ -498,7 +499,7 @@ namespace youcaihua
         {
             string played = textBox_Played.Text;
             Log.Debug(played);
-            if(played=="")
+            if (played == "")
             {
                 textBox_Played.Text = "+0";
                 input_Total_Played = 0;
@@ -506,11 +507,11 @@ namespace youcaihua
                 return;
             }
             if (played.StartsWith("+"))
-                played=played.Substring(1);
+                played = played.Substring(1);
             try
             {
                 int played_num = int.Parse(played);
-                if(played_num<0)
+                if (played_num < 0)
                 {
                     MessageBox.Show("不能小于0！", "错误！");
                     input_Total_Played = 0;
@@ -575,7 +576,7 @@ namespace youcaihua
         private void textBox_KeyDown(object sender, KeyEventArgs e)
         {
 
-            if((int)e.KeyCode==38)//↑
+            if ((int)e.KeyCode == 38)//↑
             {
                 e.Handled = true;
                 TextBox textBox = (TextBox)sender;
@@ -601,7 +602,7 @@ namespace youcaihua
                         break;
                 }
             }
-            else if((int)e.KeyCode==40)//↓
+            else if ((int)e.KeyCode == 40)//↓
             {
                 e.Handled = true;
                 TextBox textBox = (TextBox)sender;
@@ -609,7 +610,7 @@ namespace youcaihua
                 switch (textBox.Name)
                 {
                     case "textBox_Num":
-                        if(input_Total_Num>0)
+                        if (input_Total_Num > 0)
                         {
                             input_Total_Num--;
                             textBox_Num.Text = "+" + input_Total_Num.ToString();
@@ -630,7 +631,7 @@ namespace youcaihua
 
         private void textBox_MouseWheel(object sender, MouseEventArgs e)
         {
-            if(e.Delta>0)
+            if (e.Delta > 0)
             {
                 TextBox textBox = (TextBox)sender;
 
@@ -654,7 +655,7 @@ namespace youcaihua
                         break;
                 }
             }
-            else if(e.Delta<0)
+            else if (e.Delta < 0)
             {
                 TextBox textBox = (TextBox)sender;
 

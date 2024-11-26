@@ -183,4 +183,14 @@ namespace youcaihua
         public ResponseStatus ResponseStatus { get; set; }
     }
 
+    /// <summary>
+    /// Here's config loader
+    /// </summary>
+    public class Config
+    {
+        public string Code { get; set; } = null;
+        public bool? AutoAuth { get; set; } = null;
+        public string Account { get; set; } = null;
+        public string Password { get; set; } = null;
+    }
 }

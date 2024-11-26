@@ -1,4 +1,6 @@
-﻿namespace youcaihua
+﻿using System.Threading.Tasks;
+
+namespace youcaihua
 {
     partial class login_Form
     {
@@ -28,6 +30,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.btn_Close = new System.Windows.Forms.Button();
             this.btn_Mini = new System.Windows.Forms.Button();
             this.label_Account = new System.Windows.Forms.Label();
@@ -38,9 +41,11 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
-            this.btn_login = new System.Windows.Forms.Button();
             this.panel4 = new System.Windows.Forms.Panel();
             this.label_Error = new System.Windows.Forms.Label();
+            this.btn_login = new System.Windows.Forms.Button();
+            this.btn_Setting = new System.Windows.Forms.Button();
+            this.btnToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -50,9 +55,9 @@
             // btn_Close
             // 
             this.btn_Close.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btn_Close.BackColor = System.Drawing.SystemColors.Window;
-            this.btn_Close.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.btn_Close.BackColor = System.Drawing.Color.White;
             this.btn_Close.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.btn_Close.FlatAppearance.BorderColor = System.Drawing.Color.Silver;
             this.btn_Close.FlatAppearance.BorderSize = 0;
             this.btn_Close.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
             this.btn_Close.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Red;
@@ -66,7 +71,7 @@
             this.btn_Close.TabIndex = 0;
             this.btn_Close.TabStop = false;
             this.btn_Close.Text = "×";
-            this.btn_Close.UseVisualStyleBackColor = false;
+            this.btn_Close.UseVisualStyleBackColor = true;
             this.btn_Close.Click += new System.EventHandler(this.btn_Close_Click);
             this.btn_Close.MouseEnter += new System.EventHandler(this.btn_Close_MouseEnter);
             this.btn_Close.MouseLeave += new System.EventHandler(this.btn_Close_MouseLeave);
@@ -74,8 +79,7 @@
             // btn_Mini
             // 
             this.btn_Mini.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btn_Mini.BackColor = System.Drawing.SystemColors.Window;
-            this.btn_Mini.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.btn_Mini.BackColor = System.Drawing.Color.White;
             this.btn_Mini.FlatAppearance.BorderSize = 0;
             this.btn_Mini.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Silver;
             this.btn_Mini.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Gainsboro;
@@ -88,7 +92,6 @@
             this.btn_Mini.TabIndex = 0;
             this.btn_Mini.TabStop = false;
             this.btn_Mini.Text = "-";
-            this.btn_Mini.UseMnemonic = false;
             this.btn_Mini.UseVisualStyleBackColor = false;
             this.btn_Mini.Click += new System.EventHandler(this.btn_Mini_Click);
             // 
@@ -166,6 +169,7 @@
             // 
             // panel2
             // 
+            this.panel2.BackColor = System.Drawing.Color.Transparent;
             this.panel2.Controls.Add(this.textBox_Password);
             this.panel2.Controls.Add(this.label_Password);
             this.panel2.Location = new System.Drawing.Point(0, 36);
@@ -178,6 +182,7 @@
             // 
             this.panel3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel3.BackColor = System.Drawing.Color.Transparent;
             this.panel3.Controls.Add(this.panel2);
             this.panel3.Controls.Add(this.panel1);
             this.panel3.Location = new System.Drawing.Point(30, 186);
@@ -185,6 +190,29 @@
             this.panel3.Size = new System.Drawing.Size(300, 66);
             this.panel3.TabIndex = 0;
             this.panel3.MouseDown += new System.Windows.Forms.MouseEventHandler(this.login_Form_MouseDown);
+            // 
+            // panel4
+            // 
+            this.panel4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel4.BackColor = System.Drawing.Color.Transparent;
+            this.panel4.Controls.Add(this.label_Error);
+            this.panel4.Controls.Add(this.btn_login);
+            this.panel4.Location = new System.Drawing.Point(80, 350);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(200, 100);
+            this.panel4.TabIndex = 2;
+            this.panel4.MouseDown += new System.Windows.Forms.MouseEventHandler(this.login_Form_MouseDown);
+            // 
+            // label_Error
+            // 
+            this.label_Error.ForeColor = System.Drawing.Color.Red;
+            this.label_Error.Location = new System.Drawing.Point(0, 48);
+            this.label_Error.Name = "label_Error";
+            this.label_Error.Size = new System.Drawing.Size(200, 43);
+            this.label_Error.TabIndex = 0;
+            this.label_Error.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.label_Error.MouseDown += new System.Windows.Forms.MouseEventHandler(this.login_Form_MouseDown);
             // 
             // btn_login
             // 
@@ -199,43 +227,46 @@
             this.btn_login.UseVisualStyleBackColor = true;
             this.btn_login.Click += new System.EventHandler(this.btn_login_Click);
             // 
-            // panel4
+            // btn_Setting
             // 
-            this.panel4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel4.Controls.Add(this.btn_login);
-            this.panel4.Controls.Add(this.label_Error);
-            this.panel4.Location = new System.Drawing.Point(80, 350);
-            this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(200, 100);
-            this.panel4.TabIndex = 2;
-            // 
-            // label_Error
-            // 
-            this.label_Error.ForeColor = System.Drawing.Color.Red;
-            this.label_Error.Location = new System.Drawing.Point(0, 48);
-            this.label_Error.Name = "label_Error";
-            this.label_Error.Size = new System.Drawing.Size(200, 43);
-            this.label_Error.TabIndex = 0;
-            this.label_Error.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.btn_Setting.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btn_Setting.BackColor = System.Drawing.Color.White;
+            this.btn_Setting.FlatAppearance.BorderSize = 0;
+            this.btn_Setting.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Silver;
+            this.btn_Setting.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Gainsboro;
+            this.btn_Setting.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btn_Setting.Font = new System.Drawing.Font("Segoe MDL2 Assets", 10F);
+            this.btn_Setting.Location = new System.Drawing.Point(237, 0);
+            this.btn_Setting.Margin = new System.Windows.Forms.Padding(0);
+            this.btn_Setting.Name = "btn_Setting";
+            this.btn_Setting.Size = new System.Drawing.Size(41, 30);
+            this.btn_Setting.TabIndex = 3;
+            this.btn_Setting.TabStop = false;
+            this.btn_Setting.Text = "";
+            this.btn_Setting.UseVisualStyleBackColor = false;
+            this.btn_Setting.Click += new System.EventHandler(this.btn_Setting_Click);
             // 
             // login_Form
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.AutoSize = true;
-            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(360, 450);
+            this.Controls.Add(this.btn_Setting);
             this.Controls.Add(this.btn_Mini);
             this.Controls.Add(this.btn_Close);
             this.Controls.Add(this.label_Mall_Info);
             this.Controls.Add(this.panel3);
             this.Controls.Add(this.panel4);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Location = new System.Drawing.Point(0, 0);
             this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "login_Form";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "login_Form";
+            this.Load += new System.EventHandler(this.login_Form_Load);
+            this.Paint += new System.Windows.Forms.PaintEventHandler(this.login_Form_Paint);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.login_Form_MouseDown);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
@@ -262,5 +293,7 @@
         private System.Windows.Forms.Button btn_login;
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.Label label_Error;
+        private System.Windows.Forms.Button btn_Setting;
+        private System.Windows.Forms.ToolTip btnToolTip;
     }
 }

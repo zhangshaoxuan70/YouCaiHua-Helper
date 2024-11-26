@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
@@ -10,11 +11,12 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using BorderlessForm;
 using Newtonsoft.Json;
 
 namespace youcaihua
 {
-    public partial class login_Form : Form
+    public partial class login_Form : FormBase
     {
         [DllImport("Gdi32.dll", EntryPoint = "CreateRoundRectRgn")]
         private static extern IntPtr CreateRoundRectRgn
@@ -54,6 +56,9 @@ namespace youcaihua
         private const int HTCAPTION = 0x2;
 
         private const int WS_MINIMIZEBOX = 0x00020000;
+        private const int WM_SYSCOMMAND = 0x0112;
+        private const int SC_MINIMIZE = 0xF020;
+        private const int SC_RESTORE = 0xF120;
 
         protected override CreateParams CreateParams
         {
@@ -64,8 +69,8 @@ namespace youcaihua
                 CreateParams cp = base.CreateParams;
                 if (!m_aeroEnabled)
                     cp.ClassStyle |= CS_DROPSHADOW;
-                cp.Style |= WS_MINIMIZEBOX;
-                cp.ExStyle |= 0x02000000;
+                //cp.Style |= WS_MINIMIZEBOX;
+                //cp.ExStyle |= 0x02000000;
                 return cp;
             }
         }
@@ -101,6 +106,14 @@ namespace youcaihua
 
                     }
                     break;
+                case WM_SYSCOMMAND:
+                    int command = m.WParam.ToInt32();
+                    if (command == SC_RESTORE)
+                    {
+                        this.FormBorderStyle = FormBorderStyle.Sizable;
+                        this.ControlBox = true;
+                    }
+                    break;
                 default:
                     break;
             }
@@ -112,12 +125,10 @@ namespace youcaihua
         }
 
 
-
         [DllImport("user32.dll")]
         public static extern bool ReleaseCapture();
         [DllImport("user32.dll")]
         public static extern bool SendMessage(IntPtr hwnd, int wMsg, int wParam, int lParam);
-        public const int WM_SYSCOMMAND = 0x0112;
         public const int SC_MOVE = 0xF010;
 
         private Response result;
@@ -126,63 +137,55 @@ namespace youcaihua
         public login_Form()
         {
             m_aeroEnabled = false;
+            /*DoubleBuffered = true;
+            SetStyle(ControlStyles.UserPaint, true);
+            SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+            SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
+            UpdateStyles();*/
             InitializeComponent();
-            this.Text = "登录";
-            CheckForIllegalCrossThreadCalls = false;
+            this.Text = "油菜花助手-登录";
+            //CheckForIllegalCrossThreadCalls = false;
             btn_login.Enabled = false;
             //this.FormBorderStyle = FormBorderStyle.None;
             //this.Padding = new Padding(border_size);
-            if(!Global.is_formtest)
+            Task.Run(() =>
             {
-                Task.Run(() =>
+                if (Global.get_mall_code)
                 {
-                    if (Global.get_mall_code)
+                    SysInfo result_des = new SysInfo();
+                    result = Info.Check_mall(Global.mall_code);
+                    switch (result.StatusCode)
                     {
-                        SysInfo result_des = new SysInfo();
-                        result = Info.Check_mall(Global.mall_code);
-                        switch (result.StatusCode)
-                        {
-                            case 200:
-                                result_des = JsonConvert.DeserializeObject<SysInfo>(result.Result);
-                                if (result_des.ResponseStatus.ErrorCode == "0")
-                                {
-                                    this.label_Mall_Info.Text = $"登录门店：\n{result_des.MallName}({result_des.MallCode})";
-                                    btn_login.Enabled = true;
-                                    is_checked = true;
-                                    break;
-                                }
-                                else
-                                {
-                                    this.label_Mall_Info.Text = $"服务器返回错误：\n{result_des.ResponseStatus.Message}({result_des.ResponseStatus.ErrorCode})";
-                                    break;
-                                }
-                            case 404:
-                                this.label_Mall_Info.Text = $"{result_des.MallCode}此店铺代码有错误\n请检查店铺代码。";
+                        case 200:
+                            result_des = JsonConvert.DeserializeObject<SysInfo>(result.Result);
+                            if (result_des.ResponseStatus.ErrorCode == "0")
+                            {
+                                this.label_Mall_Info.Text = $"登录门店：\n{result_des.MallName}({result_des.MallCode})";
+                                btn_login.Enabled = true;
+                                is_checked = true;
                                 break;
-                            case 502:
-                                this.label_Mall_Info.Text = "连接超时，请重启软件。";
+                            }
+                            else
+                            {
+                                this.label_Mall_Info.Text = $"服务器返回错误：\n{result_des.ResponseStatus.Message}({result_des.ResponseStatus.ErrorCode})";
                                 break;
-                        }
+                            }
+                        case 404:
+                            this.label_Mall_Info.Text = $"{result_des.MallCode}此店铺代码有错误\n请检查店铺代码。";
+                            break;
+                        case 502:
+                            this.label_Mall_Info.Text = "连接超时，请重启软件。";
+                            break;
                     }
-                    else
-                        this.label_Mall_Info.Text = "没有设置店铺代码。";
-                });
-            }
-            else
-            {
-                this.label_Mall_Info.Text = "You are in testing mode!\nPlease report if something was wrong!";
-                Thread t = new Thread(delegate ()
-                {
-                    new daily_Form(new Login_Info()).ShowDialog();
-                });
-                t.Start();
-            }
-
+                }
+                else
+                    this.label_Mall_Info.Text = "没有设置店铺代码。";
+            });
         }
 
         private void login_Form_MouseDown(object sender, MouseEventArgs e)
         {
-            if(e.Button==MouseButtons.Left && e.Clicks==1)
+            if (e.Button == MouseButtons.Left && e.Clicks == 1)
             {
                 Log.Debug("login form mouse down.");
                 ReleaseCapture();
@@ -209,7 +212,7 @@ namespace youcaihua
         private void btn_Mini_Click(object sender, EventArgs e)
         {
             Log.Warn("Login Form clicked minimize.");
-            this.WindowState = FormWindowState.Minimized;
+            WindowState = FormWindowState.Minimized;
         }
 
         private void btn_login_Click(object sender, EventArgs e)
@@ -237,35 +240,35 @@ namespace youcaihua
             else if (password == "")
             {
                 label_Error.Text = "请输入密码！";
-                
+
                 missing = 2;
                 pass = false;
             }
-            if(pass==false)
+            if (pass == false)
             {
                 btn_login.Enabled = true;
                 textBox_Account.Enabled = true;
                 textBox_Password.Enabled = true;
-                if(missing==1)
+                if (missing == 1)
                     textBox_Account.Focus();
-                else if(missing==2)
+                else if (missing == 2)
                     textBox_Password.Focus();
                 return;
             }
 
-            result=Info.Get_Account(account, password);
-            if(result.StatusCode==200)
+            result = Info.Get_Account(account, password);
+            if (result.StatusCode == 200)
             {
                 Only_Status result_des = JsonConvert.DeserializeObject<Only_Status>(result.Result);
-                if(result_des.ResponseStatus.ErrorCode=="0")
+                if (result_des.ResponseStatus.ErrorCode == "0")
                 {
                     Global.is_login = true;
 
-                    Response responese=Info.Get_Login_Info();
-                    if(responese.StatusCode==200)
+                    Response responese = Info.Get_Login_Info();
+                    if (responese.StatusCode == 200)
                     {
-                        Login_Info login_Info= JsonConvert.DeserializeObject<Login_Info>(responese.Result);
-                        if(login_Info.ResponseStatus.ErrorCode=="0")
+                        Login_Info login_Info = JsonConvert.DeserializeObject<Login_Info>(responese.Result);
+                        if (login_Info.ResponseStatus.ErrorCode == "0")
                         {
                             label_Error.ForeColor = Color.Green;
                             label_Error.Text = $"登录成功！\n{login_Info.Data.RealName}\n窗口即将退出。";
@@ -279,14 +282,14 @@ namespace youcaihua
 
                         }
                     }
-                    
+
                 }
                 else
                     label_Error.Text = $"登录失败：\n{result_des.ResponseStatus.Message}({result_des.ResponseStatus.ErrorCode})";
             }
             else
                 label_Error.Text = "登录失败！\n请尝试重新登录！";
-            if(!Global.is_login)
+            if (!Global.is_login)
             {
                 btn_login.Enabled = true;
                 textBox_Account.Enabled = true;
@@ -303,8 +306,39 @@ namespace youcaihua
 
         private void textBox_Password_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (e.KeyChar == (char)Keys.Enter && is_checked==true)
-                btn_login_Click(sender,e);
+            if (e.KeyChar == (char)Keys.Enter && is_checked == true)
+                btn_login_Click(sender, e);
+        }
+
+        private void login_Form_Load(object sender, EventArgs e)
+        {
+            btnToolTip.SetToolTip(btn_Setting, "更改店铺代码");
+            btnToolTip.SetToolTip(btn_Mini, "最小化");
+            btnToolTip.SetToolTip(btn_Close, "关闭");
+            this.TransparencyKey = Color.White;
+        }
+
+        private void login_Form_Paint(object sender, PaintEventArgs e)
+        {
+            this.TransparencyKey = Color.Empty;
+
+            this.DoubleBuffered = true;
+
+            SetStyle(ControlStyles.UserPaint, true);
+            SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+            SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
+            this.Update();
+        }
+
+        private void btn_Setting_Click(object sender, EventArgs e)
+        {
+            this.Close();
+            Thread t = new Thread(delegate ()
+            {
+                //Thread.Sleep(1000);
+                new PreLoad(true).ShowDialog();
+            });
+            t.Start();
         }
     }
 }

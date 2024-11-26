@@ -15,6 +15,7 @@ using System.Threading;
 using System.Runtime.InteropServices;
 using System.Drawing;
 using System.Reflection;
+using System.Web.Configuration;
 
 namespace youcaihua
 {
@@ -32,13 +33,15 @@ namespace youcaihua
         [STAThread]
         static void Main(string[] args)
         {
+            Application.EnableVisualStyles();
+
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(CurrentDomain_AssemblyResolve);
             int argnum = args.Length;
             bool is_debug = false;
             string mall_code = "";
             bool get_mall_code = false;
             bool is_formtest = false;
-            foreach(string arg in args)
+            foreach (string arg in args)
             {
                 if (arg == "-debug" && !is_debug)
                     is_debug = true;
@@ -51,30 +54,33 @@ namespace youcaihua
                     is_formtest = true;
             }
 
-            if(is_debug)
+            if (is_debug)
             {
                 Global.debugging = true;
                 AllocConsole();
                 //FreeConsole();
                 Log.Open();
             }
-            if(get_mall_code)
+            if (get_mall_code)
             {
                 Global.get_mall_code = true;
                 Global.mall_code = mall_code;
                 Log.Debug($"Get mall code with {Global.mall_code}.");
-                Global.web_url = $"http://y{Global.mall_code}.yun.youcaihua.net:88";
             }
-            if(is_formtest)
+            Log.Debug($"debug={Global.debugging}, mall_code={Global.mall_code}, get_mall_code={Global.get_mall_code}");
+
+            Application.SetCompatibleTextRenderingDefault(false);
+            if (Has_Config())
             {
-                Global.is_formtest = true;
-                Log.Warn("You are in the form testing mode! Please check all forms which could working well!");
+                Form form = new login_Form();
+                Application.Run(form);
+            }
+            else
+            {
+                Form form = new PreLoad();
+                Application.Run(form);
             }
 
-            Log.Debug($"debug={Global.debugging}, mall_code={Global.mall_code}, get_mall_code={Global.get_mall_code}");
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new login_Form());
             //Application.Run(new daily_Form(new Login_Info()));
         }
 
@@ -87,6 +93,23 @@ namespace youcaihua
                 stream.Read(assemblyData, 0, assemblyData.Length);
                 return Assembly.Load(assemblyData);
             }
+        }
+
+        private static bool Has_Config()
+        {
+            if (Global.get_mall_code == true)
+                return true;
+            Config config = Config_Controller.Load_File();
+            if (config.Code != null)
+            {
+                Global.mall_code = config.Code;
+                Global.get_mall_code = true;
+                Log.Debug($"Config Loader: mall_code={Global.mall_code}, get_mall_code={Global.get_mall_code}");
+
+                return true;
+            }
+            else
+                return false;
         }
     }
 }
