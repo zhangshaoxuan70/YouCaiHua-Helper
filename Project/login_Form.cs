@@ -145,6 +145,8 @@ namespace youcaihua
             InitializeComponent();
             this.Text = "油菜花助手-登录";
             //CheckForIllegalCrossThreadCalls = false;
+            if (Global.not_config)
+                btn_Setting.Visible = false;
             btn_login.Enabled = false;
             //this.FormBorderStyle = FormBorderStyle.None;
             //this.Padding = new Padding(border_size);

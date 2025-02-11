@@ -98,7 +98,10 @@ namespace youcaihua
         private static bool Has_Config()
         {
             if (Global.get_mall_code == true)
+            {
+                Global.not_config = true;
                 return true;
+            }
             Config config = Config_Controller.Load_File();
             if (config.Code != null)
             {
